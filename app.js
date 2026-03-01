@@ -57,7 +57,7 @@ async function handlePublish() {
 
     const { error } = await _supabase
         .from('posts')
-        .insert([{ content }]);
+        .insert([{ content, author_id: deviceId }]);
 
     if (error) {
         alert("Oh no, la selva está saturada. Inténtalo de nuevo.");
@@ -88,6 +88,35 @@ async function handleLike(postId, btn) {
     }
 }
 
+// 6.1. Lógica de Expansión: Eliminar y Destacar
+async function handleDelete(postId) {
+    if (!confirm("¿Seguro que quieres borrar este rugido de la historia? 🌪️")) return;
+
+    const { error } = await _supabase
+        .from('posts')
+        .delete()
+        .eq('id', postId);
+
+    if (error) {
+        alert("No se pudo borrar. Tal vez el viento sopló muy fuerte.");
+    } else {
+        renderFeed();
+    }
+}
+
+async function handleHighlight(postId, currentStatus) {
+    const { error } = await _supabase
+        .from('posts')
+        .update({ is_featured: !currentStatus })
+        .eq('id', postId);
+
+    if (error) {
+        alert("No se pudo destacar. Inténtalo de nuevo.");
+    } else {
+        renderFeed();
+    }
+}
+
 // 7. Renderizado: El Feed
 async function renderFeed() {
     mainApp.innerHTML = `
@@ -111,21 +140,36 @@ async function renderFeed() {
     posts.forEach(post => {
         const date = new Date(post.created_at).toLocaleDateString();
         const likeCount = post.likes[0] ? post.likes[0].count : 0;
+        const isOwner = post.author_id === deviceId;
+        const isFeatured = post.is_featured;
 
         const postEl = document.createElement('div');
-        postEl.className = 'post';
+        postEl.className = `post ${isFeatured ? 'featured' : ''}`;
+        postEl.id = `post-${post.id}`;
+
         postEl.innerHTML = `
             <div class="post-content">${post.content}</div>
             <div class="post-meta">
                 <span>${date}</span>
-                <button class="btn-like" id="like-${post.id}">
+                <button class="btn-like ${likeCount > 0 ? 'active' : ''}" id="like-${post.id}">
                     ❤️ <span class="like-count">${likeCount}</span>
                 </button>
             </div>
+            <div class="post-actions">
+                <button class="btn-action btn-highlight" onclick="handleHighlight('${post.id}', ${isFeatured})">
+                    ${isFeatured ? '⭐ Quitar' : '⭐ Destacar'}
+                </button>
+                ${isOwner ? `
+                <button class="btn-action btn-delete" onclick="handleDelete('${post.id}')">
+                    🗑️ Eliminar
+                </button>
+                ` : ''}
+            </div>
         `;
 
-        // Asignar el click del like
-        postEl.querySelector('.btn-like').onclick = function () {
+        // El botón de like ya tiene su lógica
+        postEl.querySelector('.btn-like').onclick = function (e) {
+            e.stopPropagation();
             handleLike(post.id, this);
         };
 
