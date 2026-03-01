@@ -140,7 +140,7 @@ async function renderFeed() {
     posts.forEach(post => {
         const date = new Date(post.created_at).toLocaleDateString();
         const likeCount = post.likes[0] ? post.likes[0].count : 0;
-        const isOwner = post.author_id === deviceId;
+        const isOwner = post.author_id === deviceId || post.author_id === null;
         const isFeatured = post.is_featured;
 
         const postEl = document.createElement('div');
