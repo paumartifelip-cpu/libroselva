@@ -47,6 +47,7 @@ nav {
     font-weight: 800;
     background: linear-gradient(to right, var(--accent-color), #3b82f6);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
@@ -248,5 +249,121 @@ button[type="submit"]:hover {
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+/* ===========================
+   📱 RESPONSIVE MOBILE FIRST
+=========================== */
+
+/* Pantallas pequeñas (móviles, hasta 600px) */
+@media (max-width: 600px) {
+    :root {
+        --nav-height: 60px;
+    }
+
+    /* Navbar */
+    nav {
+        padding: 0 1rem;
+    }
+
+    .logo {
+        font-size: 1.2rem;
+    }
+
+    .nav-links a {
+        font-size: 0.85rem;
+        padding: 0.45rem 0.75rem;
+    }
+
+    .btn-new {
+        padding: 0.45rem 0.9rem !important;
+    }
+
+    /* Contenedor principal */
+    #main-app {
+        margin: 1rem auto;
+        padding: 0 0.75rem;
+    }
+
+    /* Tarjetas */
+    .post {
+        padding: 1rem;
+        border-radius: 12px;
+        margin-bottom: 1rem;
+    }
+
+    /* No elevar en hover en móvil (no hay hover táctil) */
+    .post:hover {
+        transform: none;
+    }
+
+    .post.featured::before {
+        font-size: 0.6rem;
+        top: 8px;
+        right: 8px;
+    }
+
+    .post-content {
+        font-size: 1rem;
+        margin-bottom: 0.8rem;
+    }
+
+    /* Acciones: wrap si no caben */
+    .post-actions {
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        padding-top: 0.75rem;
+        margin-top: 0.75rem;
+    }
+
+    .btn-action {
+        font-size: 0.8rem;
+        padding: 0.5rem 0.75rem;
+        border-radius: 10px;
+        /* Área táctil mínima de 44px */
+        min-height: 38px;
+    }
+
+    .btn-like {
+        padding: 0.5rem 0.75rem;
+        min-height: 38px;
+        font-size: 0.9rem;
+    }
+
+    /* Formulario */
+    .form-container {
+        padding: 1.2rem;
+        border-radius: 16px;
+    }
+
+    textarea {
+        font-size: 1rem;
+        padding: 0.85rem;
+        /* Evitar zoom automático en iOS */
+        font-size: 16px;
+    }
+
+    button[type="submit"] {
+        padding: 0.9rem;
+        font-size: 1rem;
+        /* Área táctil grande para pulgar */
+        min-height: 50px;
+    }
+}
+
+/* Pantallas muy pequeñas (hasta 380px — iPhone SE, etc.) */
+@media (max-width: 380px) {
+    .logo {
+        font-size: 1.1rem;
+    }
+
+    .nav-links a:not(.btn-new) {
+        display: none;
+        /* Ocultar "Explorar" en pantallas muy pequeñas */
+    }
+
+    .post {
+        padding: 0.85rem;
     }
 }
