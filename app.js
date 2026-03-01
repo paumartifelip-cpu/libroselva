@@ -111,7 +111,8 @@ async function handleHighlight(postId, currentStatus) {
         .eq('id', postId);
 
     if (error) {
-        alert("No se pudo destacar. Inténtalo de nuevo.");
+        console.error("❌ Error destacando:", JSON.stringify(error));
+        alert("Error: " + error.message + " (código: " + error.code + ")");
     } else {
         renderFeed();
     }
